@@ -1,4 +1,4 @@
-# Good Hamburger — Register Order
+# Register Order
 
 API REST para registro de pedidos, desenvolvida como desafio técnico.
 
