@@ -1,5 +1,7 @@
 # Register Order
 
+![CI](https://github.com/gabrielspereira2604/register-order/actions/workflows/ci.yml/badge.svg)
+
 API REST para registro de pedidos, desenvolvida como desafio técnico.
 
 ---
