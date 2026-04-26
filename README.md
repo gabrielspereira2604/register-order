@@ -27,6 +27,8 @@ dotnet run --project RegisterOrder.Web
 ```
 
 - Testes: `dotnet test`
+
+> O pipeline de CI (GitHub Actions) executa automaticamente a cada push: restore, build em Release e todos os testes.
 - API: `http://localhost:5121`
 - Documentação: `http://localhost:5121/scalar/v1`
 - Frontend: `http://localhost:5103`
