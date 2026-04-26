@@ -1,0 +1,19 @@
+<section class="discount-rules">
+    <h2>Promoções</h2>
+
+    <div class="rules-grid">
+        @foreach (var rule in Rules)
+        {
+            <DiscountRuleCard Rule="rule" />
+        }
+    </div>
+</section>
+
+@code {
+    private static readonly IReadOnlyList<DiscountRuleViewModel> Rules =
+    [
+        new(20, "Sanduíche + Acompanhamento + Bebida", ["burger", "utensils", "drink"]),
+        new(15, "Sanduíche + Bebida", ["burger", "drink"]),
+        new(10, "Sanduíche + Acompanhamento", ["burger", "utensils"])
+    ];
+}

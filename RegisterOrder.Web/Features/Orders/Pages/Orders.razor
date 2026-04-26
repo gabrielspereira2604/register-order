@@ -1,0 +1,122 @@
+@page "/orders"
+@inject RegisterOrder.Web.Features.Orders.Services.OrdersApiService OrdersApiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Pedidos | Good Hamburger</PageTitle>
+
+<section class="orders-page">
+    <div class="orders-hero">
+        <h1>Pedidos</h1>
+        <p>Acompanhe e gerencie todos os pedidos em tempo real.</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="state-message">Carregando pedidos...</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="state-message state-message-error">@errorMessage</div>
+    }
+    else
+    {
+        <div class="orders-panel">
+            <OrdersTable Orders="orders"
+                         OrderEdited="EditOrderAsync"
+                         OrderDeleted="DeleteOrderAsync"
+                         DeletingOrderId="deletingOrderId" />
+
+            <div class="orders-footer">
+                <p>
+                    Exibindo <strong>@FirstVisibleOrder</strong> a <strong>@LastVisibleOrder</strong>
+                    de <strong>@totalCount</strong> pedidos
+                </p>
+
+                <OrdersPagination Page="currentPage" TotalPages="totalPages" PageChanged="LoadPageAsync" />
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <OrdersSummaryCard Label="Receita Total" Value="totalRevenue" IsMoney="true" Icon="revenue" Tone="warm" />
+            <OrdersSummaryCard Label="Total de Pedidos" Value="totalCount" Icon="orders" Tone="cool" />
+        </div>
+    }
+</section>
+
+@code {
+    private const int PageSize = 5;
+
+    private IReadOnlyList<OrderViewModel> orders = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+    private int currentPage = 1;
+    private int totalCount;
+    private int totalPages = 1;
+    private int? deletingOrderId;
+    private decimal totalRevenue;
+
+    private int FirstVisibleOrder => totalCount == 0 ? 0 : ((currentPage - 1) * PageSize) + 1;
+
+    private int LastVisibleOrder => Math.Min(currentPage * PageSize, totalCount);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPageAsync(1);
+    }
+
+    private void EditOrderAsync(int id)
+    {
+        NavigationManager.NavigateTo($"orders/{id}/edit");
+    }
+
+    private async Task DeleteOrderAsync(int id)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Deseja excluir o pedido #ORD-{id:0000}?");
+        if (!confirmed) return;
+
+        deletingOrderId = id;
+        errorMessage = null;
+
+        try
+        {
+            await OrdersApiService.DeleteOrderAsync(id);
+
+            var newTotalPages = (int)Math.Ceiling((totalCount - 1) / (double)PageSize);
+            var targetPage = currentPage > Math.Max(1, newTotalPages) ? Math.Max(1, newTotalPages) : currentPage;
+            await LoadPageAsync(targetPage);
+        }
+        catch
+        {
+            errorMessage = "Não foi possível excluir o pedido agora.";
+        }
+        finally
+        {
+            deletingOrderId = null;
+        }
+    }
+
+    private async Task LoadPageAsync(int page)
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var result = await OrdersApiService.GetOrdersAsync(page, PageSize);
+            orders = result.Data;
+            currentPage = result.Page;
+            totalCount = result.TotalCount;
+            totalPages = Math.Max(result.TotalPages, 1);
+            totalRevenue = result.TotalRevenue;
+        }
+        catch
+        {
+            errorMessage = "Não foi possível carregar os pedidos agora.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

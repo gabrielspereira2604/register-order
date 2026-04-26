@@ -1,0 +1,64 @@
+@using System.Globalization
+
+<article class="order-menu-card @(IsSelected ? "selected" : null)">
+    <button type="button" class="card-hit-area" @onclick="Toggle" aria-pressed="@IsSelected">
+        <span class="item-icon @IconTone" aria-hidden="true">
+            <FoodIcon Name="@IconName" />
+        </span>
+
+        @if (IsSelected)
+        {
+            <span class="selected-mark" aria-hidden="true">✓</span>
+        }
+
+        <span class="item-copy">
+            <strong>@Item.Name</strong>
+            <span>@Description</span>
+        </span>
+
+        <span class="item-footer">
+            <strong>@FormatMoney(Item.Price)</strong>
+
+            @if (!IsSelected)
+            {
+                <span class="add-pill">Adicionar</span>
+            }
+        </span>
+    </button>
+</article>
+
+@code {
+    private static readonly CultureInfo MoneyCulture = CultureInfo.GetCultureInfo("pt-BR");
+
+    [Parameter, EditorRequired]
+    public MenuItemViewModel Item { get; set; } = default!;
+
+    [Parameter]
+    public bool IsSelected { get; set; }
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public EventCallback<MenuItemViewModel> Selected { get; set; }
+
+    private string IconName => Item.Type switch
+    {
+        MenuItemType.Sandwich => "burger",
+        MenuItemType.Side => "utensils",
+        MenuItemType.Drink => "drink",
+        _ => "burger"
+    };
+
+    private string IconTone => Item.Type switch
+    {
+        MenuItemType.Sandwich => "warm",
+        MenuItemType.Side => "rose",
+        MenuItemType.Drink => "neutral",
+        _ => "neutral"
+    };
+
+    private Task Toggle() => Selected.InvokeAsync(Item);
+
+    private static string FormatMoney(decimal value) => value.ToString("C2", MoneyCulture);
+}

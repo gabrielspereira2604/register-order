@@ -1,0 +1,31 @@
+<section class="menu-section">
+    <div class="section-heading">
+        <FoodIcon Name="@Icon" />
+        <h2>@Title</h2>
+        <span></span>
+    </div>
+
+    <div class="items-grid columns-@Columns">
+        @foreach (var item in Items)
+        {
+            <MenuItemCard Item="item" Tag="@Tag" />
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MenuItemViewModel> Items { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public string Tag { get; set; } = string.Empty;
+
+    [Parameter]
+    public int Columns { get; set; } = 3;
+}

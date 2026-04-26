@@ -1,0 +1,21 @@
+<article class="rule-card">
+    <div class="icons-row">
+        @for (var index = 0; index < Rule.Icons.Count; index++)
+        {
+            <FoodIcon Name="@Rule.Icons[index]" />
+
+            @if (index < Rule.Icons.Count - 1)
+            {
+                <span class="plus">+</span>
+            }
+        }
+    </div>
+
+    <strong>@Rule.Percent% OFF</strong>
+    <p>@Rule.Description</p>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public DiscountRuleViewModel Rule { get; set; } = default!;
+}

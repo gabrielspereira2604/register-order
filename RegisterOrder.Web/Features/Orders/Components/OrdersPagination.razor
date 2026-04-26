@@ -1,0 +1,83 @@
+<nav class="orders-pagination" aria-label="Orders pagination">
+    <button type="button" class="page-button muted" disabled="@(Page <= 1)" @onclick="GoToPrevious" aria-label="Previous page">
+        ‹
+    </button>
+
+    @foreach (var pageNumber in VisiblePages)
+    {
+        if (pageNumber is null)
+        {
+            <span class="ellipsis">...</span>
+        }
+        else
+        {
+            <button
+                type="button"
+                class="page-number @(pageNumber == Page ? "active" : null)"
+                aria-current="@(pageNumber == Page ? "page" : null)"
+                @onclick="() => GoToPage(pageNumber.Value)">
+                @pageNumber
+            </button>
+        }
+    }
+
+    <button type="button" class="page-button muted" disabled="@(Page >= TotalPages)" @onclick="GoToNext" aria-label="Next page">
+        ›
+    </button>
+</nav>
+
+@code {
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    [Parameter]
+    public int TotalPages { get; set; } = 1;
+
+    [Parameter, EditorRequired]
+    public EventCallback<int> PageChanged { get; set; }
+
+    private IEnumerable<int?> VisiblePages
+    {
+        get
+        {
+            var lastPage = Math.Max(TotalPages, 1);
+            var pages = new List<int?> { 1 };
+
+            if (lastPage >= 2)
+            {
+                pages.Add(2);
+            }
+
+            if (lastPage >= 3)
+            {
+                pages.Add(3);
+            }
+
+            if (lastPage > 4)
+            {
+                pages.Add(null);
+                pages.Add(lastPage);
+            }
+            else if (lastPage == 4)
+            {
+                pages.Add(4);
+            }
+
+            return pages.DistinctBy(page => page);
+        }
+    }
+
+    private Task GoToPrevious() => GoToPage(Page - 1);
+
+    private Task GoToNext() => GoToPage(Page + 1);
+
+    private async Task GoToPage(int page)
+    {
+        if (page < 1 || page > TotalPages || page == Page)
+        {
+            return;
+        }
+
+        await PageChanged.InvokeAsync(page);
+    }
+}

@@ -1,0 +1,85 @@
+@using System.Globalization
+
+<aside class="summary-panel">
+    <div class="summary-heading">
+        <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+                <path d="M7 2h2v3H7V2Zm4 0h2v3h-2V2Zm4 0h2v3h-2V2ZM5 5h14v16H5V5Zm2 4h10V7H7v2Zm0 4h10v-2H7v2Zm0 4h7v-2H7v2Z" />
+            </svg>
+        </span>
+        <h2>Resumo do Pedido</h2>
+    </div>
+
+    <div class="summary-items">
+        @if (Items.Count == 0)
+        {
+            <p class="empty-tray">Selecione os itens para compor o pedido.</p>
+        }
+        else
+        {
+            @foreach (var item in Items)
+            {
+                <div class="summary-item">
+                    <span class="summary-item-icon" aria-hidden="true">
+                        <FoodIcon Name="@GetIconName(item)" />
+                    </span>
+
+                    <strong class="summary-item-name">@item.Name</strong>
+
+                    <strong class="summary-price">@FormatMoney(item.Price)</strong>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="summary-total">
+        <span>Subtotal</span>
+        <strong>@FormatMoney(Subtotal)</strong>
+    </div>
+
+    <div class="summary-actions">
+        <button type="button" class="primary-action" disabled="@IsSubmitDisabled" @onclick="Submit">
+            @SubmitText
+        </button>
+        <button type="button" class="secondary-action" disabled="@(Items.Count == 0 || IsBusy)" @onclick="Clear">
+            Limpar
+        </button>
+    </div>
+</aside>
+
+@code {
+    private static readonly CultureInfo MoneyCulture = CultureInfo.GetCultureInfo("pt-BR");
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MenuItemViewModel> Items { get; set; } = [];
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    [Parameter]
+    public string SubmitText { get; set; } = "Criar Pedido";
+
+    [Parameter, EditorRequired]
+    public EventCallback Submitted { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback Cleared { get; set; }
+
+    private decimal Subtotal => Items.Sum(item => item.Price);
+
+    private bool IsSubmitDisabled => Items.Count == 0 || IsBusy;
+
+    private Task Submit() => Submitted.InvokeAsync();
+
+    private Task Clear() => Cleared.InvokeAsync();
+
+    private static string GetIconName(MenuItemViewModel item) => item.Type switch
+    {
+        MenuItemType.Sandwich => "burger",
+        MenuItemType.Side => "utensils",
+        MenuItemType.Drink => "drink",
+        _ => "burger"
+    };
+
+    private static string FormatMoney(decimal value) => value.ToString("C2", MoneyCulture);
+}

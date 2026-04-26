@@ -1,0 +1,18 @@
+<article class="menu-card">
+    <div class="card-main">
+        <h3>@Item.Name</h3>
+        <strong>@FormatMoney(Item.Price)</strong>
+    </div>
+
+    <span class="tag">@Tag</span>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public MenuItemViewModel Item { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public string Tag { get; set; } = string.Empty;
+
+    private static string FormatMoney(decimal value) => $"R$ {value:N2}";
+}

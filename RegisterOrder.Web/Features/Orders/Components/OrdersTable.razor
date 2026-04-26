@@ -1,0 +1,96 @@
+@using System.Globalization
+
+<div class="orders-table-shell">
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data / Hora</th>
+                <th>Itens</th>
+                <th>Subtotal</th>
+                <th>Desconto %</th>
+                <th>Total</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Orders)
+            {
+                <tr>
+                    <td class="order-id">@FormatOrderId(order.Id)</td>
+                    <td>
+                        <div class="date-cell">
+                            <strong>@order.CreatedAt.ToString("d MMM yyyy", PtBR)</strong>
+                            <span>@order.CreatedAt.ToString("HH:mm", PtBR)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="items-text" title="@FormatItems(order)">
+                            @FormatItems(order)
+                        </span>
+                    </td>
+                    <td>@FormatMoney(order.Subtotal)</td>
+                    <td>
+                        @if (NormalizePercent(order.DiscountPercent) > 0)
+                        {
+                            <span class="discount-badge">@FormatPercent(order.DiscountPercent)</span>
+                        }
+                        else
+                        {
+                            <span>0%</span>
+                        }
+                    </td>
+                    <td class="total-cell">@FormatMoney(order.Total)</td>
+                    <td class="actions-cell">
+                        <button class="action-btn action-btn-edit"
+                                title="Editar pedido"
+                                disabled="@(DeletingOrderId == order.Id)"
+                                @onclick="() => OrderEdited.InvokeAsync(order.Id)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.2a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                            </svg>
+                        </button>
+                        <button class="action-btn action-btn-delete"
+                                title="Excluir pedido"
+                                disabled="@(DeletingOrderId == order.Id)"
+                                @onclick="() => OrderDeleted.InvokeAsync(order.Id)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private static readonly CultureInfo PtBR = CultureInfo.GetCultureInfo("pt-BR");
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<OrderViewModel> Orders { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public EventCallback<int> OrderEdited { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<int> OrderDeleted { get; set; }
+
+    [Parameter]
+    public int? DeletingOrderId { get; set; }
+
+    private static string FormatOrderId(int id) => $"#ORD-{id:0000}";
+
+    private static string FormatItems(OrderViewModel order)
+        => string.Join(", ", order.Items.Select(item => item.Name));
+
+    private static string FormatMoney(decimal value)
+        => value.ToString("C2", PtBR);
+
+    private static decimal NormalizePercent(decimal percent)
+        => percent <= 1 ? percent * 100 : percent;
+
+    private static string FormatPercent(decimal percent)
+        => $"{NormalizePercent(percent):0}%";
+}

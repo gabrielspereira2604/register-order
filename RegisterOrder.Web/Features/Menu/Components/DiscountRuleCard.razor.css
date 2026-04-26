@@ -1,0 +1,57 @@
+.rule-card {
+    height: 225px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(73, 44, 44, 0.03);
+}
+
+.icons-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 27px;
+    color: var(--color-wine);
+}
+
+.icons-row :deep(.food-icon) {
+    width: 25px;
+    height: 25px;
+}
+
+.plus {
+    margin: 0 15px;
+    color: #2a2020;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+strong {
+    margin-top: 35px;
+    color: var(--color-wine);
+    font-size: 43px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
+}
+
+p {
+    margin-top: 16px;
+    color: #5c4c4c;
+    font-size: 17px;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    .rule-card {
+        height: 200px;
+    }
+
+    strong {
+        font-size: 34px;
+    }
+}

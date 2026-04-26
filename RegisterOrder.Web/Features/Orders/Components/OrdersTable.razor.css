@@ -1,0 +1,175 @@
+.orders-table-shell {
+    overflow-x: auto;
+    background: var(--color-card);
+}
+
+.orders-table {
+    width: 100%;
+    min-width: 1050px;
+    border-collapse: collapse;
+    color: #171717;
+    table-layout: fixed;
+}
+
+thead {
+    background: #f4f3f2;
+}
+
+th {
+    height: 61px;
+    padding: 0 31px;
+    color: #1f1112;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+th:nth-child(1) {
+    width: 13%;
+}
+
+th:nth-child(2) {
+    width: 13%;
+}
+
+th:nth-child(3) {
+    width: 34%;
+}
+
+th:nth-child(4) {
+    width: 10%;
+}
+
+th:nth-child(5) {
+    width: 11%;
+}
+
+th:nth-child(6) {
+    width: 10%;
+}
+
+th:nth-child(7) {
+    width: 9%;
+}
+
+td {
+    height: 104px;
+    padding: 0 31px;
+    border-bottom: 1px solid #e9e7e5;
+    font-size: 18px;
+    line-height: 1.25;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.order-id {
+    color: var(--color-wine);
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+}
+
+.date-cell {
+    display: grid;
+    gap: 2px;
+}
+
+.date-cell strong {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.date-cell span {
+    color: #221718;
+    font-size: 14px;
+}
+
+.items-text {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+}
+
+.discount-badge {
+    display: inline-flex;
+    min-width: 51px;
+    height: 29px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: #c7e9fb;
+    color: #00314f;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.total-cell {
+    font-weight: 700;
+}
+
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.action-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.action-btn svg path {
+    fill: currentColor;
+}
+
+.action-btn:disabled {
+    cursor: default;
+    opacity: 0.4;
+}
+
+.action-btn-edit {
+    color: var(--color-wine);
+}
+
+.action-btn-edit:hover:not(:disabled) {
+    background: #f5e6ea;
+}
+
+.action-btn-delete {
+    color: #6b3333;
+}
+
+.action-btn-delete:hover:not(:disabled) {
+    background: #fdecea;
+    color: #970024;
+}
+
+@media (max-width: 760px) {
+    th,
+    td {
+        padding-inline: 22px;
+    }
+}

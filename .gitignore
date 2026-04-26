@@ -1,0 +1,21 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# dotnet
+*.swp
+project.lock.json
+
+# Publicação
+publish/

@@ -1,0 +1,142 @@
+.order-menu-card {
+    min-height: 210px;
+    border: 1px solid #f0eeee;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 7px 18px rgba(25, 15, 15, 0.025);
+}
+
+.order-menu-card.selected {
+    border-color: var(--color-wine);
+    box-shadow: none;
+}
+
+.card-hit-area {
+    position: relative;
+    width: 100%;
+    min-height: 208px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 0;
+    border-radius: 8px;
+    padding: 20px 20px 18px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+
+.item-icon {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.item-icon :deep(.food-icon) {
+    width: 24px;
+    height: 24px;
+}
+
+.warm {
+    background: #ffdfe3;
+    color: var(--color-wine);
+}
+
+.rose {
+    background: #ffdfe3;
+    color: var(--color-wine);
+}
+
+.neutral {
+    background: #e9e8e6;
+    color: #4b3c3c;
+}
+
+.selected-mark {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-wine);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.item-copy {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.item-copy strong {
+    color: #151515;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.item-copy span {
+    max-width: 330px;
+    color: #3b3030;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+}
+
+.item-footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: auto;
+}
+
+.item-footer strong {
+    color: var(--color-wine);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+}
+
+.add-pill {
+    min-width: 68px;
+    height: 33px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-wine);
+    border-radius: 17px;
+    color: var(--color-wine);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@media (max-width: 760px) {
+    .order-menu-card,
+    .card-hit-area {
+        min-height: 180px;
+    }
+
+    .item-copy strong,
+    .item-footer strong {
+        font-size: 17px;
+    }
+
+    .item-copy span {
+        font-size: 13px;
+    }
+}

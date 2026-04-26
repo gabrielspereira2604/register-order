@@ -1,0 +1,86 @@
+.menu-page {
+    position: relative;
+    min-height: calc(100vh - 72px);
+    padding: 48px 31px 80px;
+    overflow: hidden;
+    background: var(--color-paper);
+}
+
+.hero-copy,
+.menu-sections,
+.state-message {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-copy {
+    margin-bottom: 64px;
+}
+
+.hero-copy h1 {
+    color: var(--color-wine);
+    font-size: 54px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: 0.04em;
+}
+
+.hero-copy p {
+    margin-top: 18px;
+    color: #332425;
+    font-size: 17px;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+}
+
+.menu-sections {
+    display: grid;
+    gap: 56px;
+}
+
+.state-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    color: var(--color-muted);
+    font-size: 16px;
+}
+
+.state-message-error {
+    color: var(--color-wine);
+}
+
+@media (max-width: 980px) {
+    .menu-page {
+        padding: 36px 24px 60px;
+    }
+
+    .hero-copy {
+        margin-bottom: 48px;
+    }
+
+    .hero-copy h1 {
+        font-size: 42px;
+    }
+
+    .hero-copy p {
+        max-width: 620px;
+        font-size: 16px;
+        letter-spacing: 0.04em;
+    }
+
+    .menu-sections {
+        gap: 44px;
+    }
+}
+
+@media (max-width: 640px) {
+    .menu-page {
+        min-height: calc(100vh - 100px);
+    }
+
+    .hero-copy h1 {
+        font-size: 34px;
+    }
+}

@@ -1,0 +1,62 @@
+@page "/"
+@page "/menu"
+@inject RegisterOrder.Web.Features.Menu.Services.MenuApiService MenuApiService
+
+<PageTitle>Cardápio | Good Hamburger</PageTitle>
+
+<section class="menu-page">
+    <div class="hero-copy">
+        <h1>Nosso Cardápio</h1>
+        <p>Seleções cuidadosamente preparadas para o melhor da experiência.</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="state-message">Carregando cardápio...</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="state-message state-message-error">@errorMessage</div>
+    }
+    else
+    {
+        <div class="menu-sections">
+            <MenuSection Title="Sanduíches" Icon="burger" Items="Sandwiches" Tag="Sanduíche" Columns="3" />
+            <MenuSection Title="Acompanhamentos" Icon="utensils" Items="Sides" Tag="Acompanhamento" Columns="1" />
+            <MenuSection Title="Bebidas" Icon="drink" Items="Drinks" Tag="Bebida" Columns="1" />
+        </div>
+    }
+
+    <DiscountRules />
+</section>
+
+@code {
+    private IReadOnlyList<MenuItemViewModel> menuItems = [];
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    private IReadOnlyList<MenuItemViewModel> Sandwiches =>
+        menuItems.Where(item => item.Type == MenuItemType.Sandwich).ToList();
+
+    private IReadOnlyList<MenuItemViewModel> Sides =>
+        menuItems.Where(item => item.Type == MenuItemType.Side).ToList();
+
+    private IReadOnlyList<MenuItemViewModel> Drinks =>
+        menuItems.Where(item => item.Type == MenuItemType.Drink).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            menuItems = await MenuApiService.GetMenuAsync();
+        }
+        catch
+        {
+            errorMessage = "Não foi possível carregar o cardápio agora.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

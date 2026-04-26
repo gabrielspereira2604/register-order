@@ -1,0 +1,199 @@
+@page "/orders/new"
+@page "/orders/{OrderId:int}/edit"
+@inject RegisterOrder.Web.Features.Menu.Services.MenuApiService MenuApiService
+@inject RegisterOrder.Web.Features.Orders.Services.OrdersApiService OrdersApiService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@PageTitle | Good Hamburger</PageTitle>
+
+<section class="order-form-page">
+    <div class="form-hero">
+        <h1>@PageTitle</h1>
+        <p>Selecione os itens para compor o pedido</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="state-message">Carregando pedido...</div>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="state-message state-message-error">@errorMessage</div>
+    }
+    else
+    {
+        <div class="form-shell">
+            <div class="catalog-sections">
+                <div class="catalog-row catalog-row-sandwiches" aria-label="Sandwiches">
+                    @foreach (var item in Sandwiches)
+                    {
+                        <OrderMenuItemCard
+                            Item="item"
+                            Description="@GetDescription(item)"
+                            IsSelected="@selectedItemIds.Contains(item.Id)"
+                            Selected="SelectItemAsync" />
+                    }
+                </div>
+
+                <div class="catalog-row catalog-row-single" aria-label="Sides">
+                    @foreach (var item in Sides)
+                    {
+                        <OrderMenuItemCard
+                            Item="item"
+                            Description="@GetDescription(item)"
+                            IsSelected="@selectedItemIds.Contains(item.Id)"
+                            Selected="SelectItemAsync" />
+                    }
+                </div>
+
+                <div class="catalog-row catalog-row-single" aria-label="Drinks">
+                    @foreach (var item in Drinks)
+                    {
+                        <OrderMenuItemCard
+                            Item="item"
+                            Description="@GetDescription(item)"
+                            IsSelected="@selectedItemIds.Contains(item.Id)"
+                            Selected="SelectItemAsync" />
+                    }
+                </div>
+            </div>
+
+            <OrderSummaryPanel
+                Items="SelectedItems"
+                IsBusy="isSaving"
+                SubmitText="@SubmitText"
+                Submitted="SaveAsync"
+                Cleared="ClearTrayAsync" />
+        </div>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public int? OrderId { get; set; }
+
+    private IReadOnlyList<MenuItemViewModel> menuItems = [];
+    private readonly HashSet<int> selectedItemIds = [];
+    private bool isLoading = true;
+    private bool isSaving;
+    private string? errorMessage;
+
+    private bool IsEditing => OrderId.HasValue;
+
+    private string PageTitle => IsEditing ? "Editar Pedido" : "Novo Pedido";
+
+    private string SubmitText => IsEditing ? "Atualizar Pedido" : "Criar Pedido";
+
+    private IReadOnlyList<MenuItemViewModel> SelectedItems =>
+        menuItems.Where(item => selectedItemIds.Contains(item.Id)).ToList();
+
+    private IReadOnlyList<MenuItemViewModel> Sandwiches =>
+        menuItems.Where(item => item.Type == MenuItemType.Sandwich).ToList();
+
+    private IReadOnlyList<MenuItemViewModel> Sides =>
+        menuItems.Where(item => item.Type == MenuItemType.Side).ToList();
+
+    private IReadOnlyList<MenuItemViewModel> Drinks =>
+        menuItems.Where(item => item.Type == MenuItemType.Drink).ToList();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+        selectedItemIds.Clear();
+
+        try
+        {
+            menuItems = await MenuApiService.GetMenuAsync();
+
+            if (OrderId is int orderId)
+            {
+                var order = await OrdersApiService.GetOrderAsync(orderId);
+
+                foreach (var item in order.Items)
+                {
+                    selectedItemIds.Add(item.MenuItemId);
+                }
+            }
+        }
+        catch
+        {
+            errorMessage = "Não foi possível carregar o pedido agora.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private Task SelectItemAsync(MenuItemViewModel item)
+    {
+        if (selectedItemIds.Contains(item.Id))
+        {
+            selectedItemIds.Remove(item.Id);
+            return Task.CompletedTask;
+        }
+
+        var sameTypeIds = menuItems
+            .Where(menuItem => menuItem.Type == item.Type)
+            .Select(menuItem => menuItem.Id)
+            .ToList();
+
+        foreach (var sameTypeId in sameTypeIds)
+        {
+            selectedItemIds.Remove(sameTypeId);
+        }
+
+        selectedItemIds.Add(item.Id);
+        return Task.CompletedTask;
+    }
+
+    private Task ClearTrayAsync()
+    {
+        selectedItemIds.Clear();
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveAsync()
+    {
+        if (selectedItemIds.Count == 0 || isSaving)
+        {
+            return;
+        }
+
+        isSaving = true;
+        errorMessage = null;
+
+        try
+        {
+            var request = new OrderRequestViewModel(SelectedItems.Select(item => item.Id).ToList());
+
+            if (OrderId is int orderId)
+            {
+                await OrdersApiService.UpdateOrderAsync(orderId, request);
+            }
+            else
+            {
+                await OrdersApiService.CreateOrderAsync(request);
+            }
+
+            NavigationManager.NavigateTo("orders");
+        }
+        catch
+        {
+            errorMessage = "Não foi possível salvar o pedido agora.";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private static string GetDescription(MenuItemViewModel item) => item.Type switch
+    {
+        MenuItemType.Sandwich => "Sanduíche",
+        MenuItemType.Side => "Acompanhamento",
+        MenuItemType.Drink => "Bebida",
+        _ => string.Empty
+    };
+}
