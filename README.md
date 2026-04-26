@@ -8,9 +8,11 @@ API REST para registro de pedidos, desenvolvida como desafio técnico.
 
 ## Como executar
 
-**Pré-requisitos:** .NET 9 SDK e Docker.
+**Pré-requisitos:** [.NET 9 SDK](https://dotnet.microsoft.com/download) e [Docker](https://www.docker.com/products/docker-desktop).
 
 > O SQL Server roda via Docker, eliminando a necessidade de instalação local. O container sobe um servidor isolado na porta `1433` pronto para uso.
+
+**Sem Docker?** Se já tiver o SQL Server instalado localmente, ajuste a connection string em `RegisterOrder.API/appsettings.Development.json` apontando para sua instância e pule o passo 1.
 
 ```bash
 # 1. Subir o banco
