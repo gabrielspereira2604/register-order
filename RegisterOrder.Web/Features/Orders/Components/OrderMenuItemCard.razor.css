@@ -1,9 +1,9 @@
 .order-menu-card {
-    min-height: 210px;
     border: 1px solid #f0eeee;
     border-radius: 8px;
     background: #ffffff;
     box-shadow: 0 7px 18px rgba(25, 15, 15, 0.025);
+    overflow: hidden;
 }
 
 .order-menu-card.selected {
@@ -14,52 +14,36 @@
 .card-hit-area {
     position: relative;
     width: 100%;
-    min-height: 208px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     border: 0;
-    border-radius: 8px;
-    padding: 20px 20px 18px;
+    border-radius: 0;
+    padding: 0 0 18px;
     background: transparent;
     color: inherit;
     cursor: pointer;
     text-align: left;
 }
 
-.item-icon {
-    display: inline-flex;
-    width: 44px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
+.item-image {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.item-icon :deep(.food-icon) {
-    width: 24px;
-    height: 24px;
-}
-
-.warm {
-    background: #ffdfe3;
-    color: var(--color-wine);
-}
-
-.rose {
-    background: #ffdfe3;
-    color: var(--color-wine);
-}
-
-.neutral {
-    background: #e9e8e6;
-    color: #4b3c3c;
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .selected-mark {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 12px;
+    right: 12px;
     width: 22px;
     height: 22px;
     display: inline-flex;
@@ -75,13 +59,14 @@
 
 .item-copy {
     display: grid;
-    gap: 8px;
-    margin-top: 18px;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 0 16px;
 }
 
 .item-copy strong {
     color: #151515;
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     line-height: 1;
 }
@@ -89,7 +74,7 @@
 .item-copy span {
     max-width: 330px;
     color: #3b3030;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
     letter-spacing: 0.02em;
 }
@@ -101,11 +86,12 @@
     justify-content: space-between;
     gap: 14px;
     margin-top: auto;
+    padding: 10px 16px 0;
 }
 
 .item-footer strong {
     color: var(--color-wine);
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     letter-spacing: 0.06em;
     line-height: 1;
@@ -113,30 +99,29 @@
 
 .add-pill {
     min-width: 68px;
-    height: 33px;
+    height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--color-wine);
-    border-radius: 17px;
+    border-radius: 15px;
     color: var(--color-wine);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 1;
 }
 
 @media (max-width: 760px) {
-    .order-menu-card,
-    .card-hit-area {
-        min-height: 180px;
+    .item-image {
+        height: 110px;
     }
 
     .item-copy strong,
     .item-footer strong {
-        font-size: 17px;
+        font-size: 16px;
     }
 
     .item-copy span {
-        font-size: 13px;
+        font-size: 12px;
     }
 }

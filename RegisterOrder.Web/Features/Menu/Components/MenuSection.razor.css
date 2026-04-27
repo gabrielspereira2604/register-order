@@ -39,7 +39,7 @@
 }
 
 .columns-1 {
-    grid-template-columns: minmax(0, 492px);
+    grid-template-columns: calc((100% - 62px) / 3);
 }
 
 @media (max-width: 980px) {

@@ -2,9 +2,9 @@
 
 <article class="order-menu-card @(IsSelected ? "selected" : null)">
     <button type="button" class="card-hit-area" @onclick="Toggle" aria-pressed="@IsSelected">
-        <span class="item-icon @IconTone" aria-hidden="true">
-            <FoodIcon Name="@IconName" />
-        </span>
+        <div class="item-image">
+            <img src="@GetImagePath(Item)" alt="@Item.Name" />
+        </div>
 
         @if (IsSelected)
         {
@@ -42,20 +42,14 @@
     [Parameter, EditorRequired]
     public EventCallback<MenuItemViewModel> Selected { get; set; }
 
-    private string IconName => Item.Type switch
+    private static string GetImagePath(MenuItemViewModel item) => item.Name switch
     {
-        MenuItemType.Sandwich => "burger",
-        MenuItemType.Side => "utensils",
-        MenuItemType.Drink => "drink",
-        _ => "burger"
-    };
-
-    private string IconTone => Item.Type switch
-    {
-        MenuItemType.Sandwich => "warm",
-        MenuItemType.Side => "rose",
-        MenuItemType.Drink => "neutral",
-        _ => "neutral"
+        "X Burger" => "images/x-burguer.jpeg",
+        "X Egg" => "images/x-egg.jpg",
+        "X Bacon" => "images/x-bacon.jpg",
+        "Batata frita" => "images/batata-frita.jpg",
+        "Refrigerante" => "images/refrigerante.jpg",
+        _ => "images/default.jpg"
     };
 
     private Task Toggle() => Selected.InvokeAsync(Item);

@@ -1,10 +1,15 @@
 <article class="menu-card">
-    <div class="card-main">
-        <h3>@Item.Name</h3>
-        <strong>@FormatMoney(Item.Price)</strong>
+    <div class="card-image">
+        <img src="@GetImagePath(Item)" alt="@Item.Name" />
     </div>
 
-    <span class="tag">@Tag</span>
+    <div class="card-body">
+        <div class="card-main">
+            <h3>@Item.Name</h3>
+            <strong>@FormatMoney(Item.Price)</strong>
+        </div>
+        <span class="tag">@Tag</span>
+    </div>
 </article>
 
 @code {
@@ -13,6 +18,16 @@
 
     [Parameter, EditorRequired]
     public string Tag { get; set; } = string.Empty;
+
+    private static string GetImagePath(MenuItemViewModel item) => item.Name switch
+    {
+        "X Burger" => "images/x-burguer.jpeg",
+        "X Egg" => "images/x-egg.jpg",
+        "X Bacon" => "images/x-bacon.jpg",
+        "Batata frita" => "images/batata-frita.jpg",
+        "Refrigerante" => "images/refrigerante.jpg",
+        _ => "images/default.jpg"
+    };
 
     private static string FormatMoney(decimal value) => $"R$ {value:N2}";
 }
